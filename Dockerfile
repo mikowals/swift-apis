@@ -48,7 +48,7 @@ RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 WORKDIR /swift-apis
 
 # Perform CMake based build
-ENV TF_NEED_CUDA=1
+ENV TF_NEED_CUDA=0
 ENV CTEST_OUTPUT_ON_FAILURE=1
 RUN cmake                                                                       \
       -B /BinaryCache/tensorflow-swift-apis                                     \
