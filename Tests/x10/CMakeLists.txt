@@ -2,7 +2,9 @@ add_executable(ops_test
   ops_test.swift)
 target_link_libraries(ops_test PRIVATE
   x10
-  TensorFlow)
+  TensorFlow
+  x10_xla_tensor_wrapper)
+  
 add_test(NAME X10.Operations
   COMMAND ops_test)
 
