@@ -1,6 +1,5 @@
 import TensorFlow
 import XCTest
-import x10_xla_tensor_wrapper
 
 // TODO(b/130689556): Remove this environment setting once the bug is fixed.
 setenv("XLA_FLAGS", "--xla_cpu_fast_math_honor_nans=true --xla_cpu_fast_math_honor_infs=true", 1)
