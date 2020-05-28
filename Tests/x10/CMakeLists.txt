@@ -3,7 +3,7 @@ add_executable(ops_test
 target_link_libraries(ops_test PRIVATE
   x10
   TensorFlow
-  x10_xla_tensor_wrapper)
+  CX10)
   
 add_test(NAME X10.Operations
   COMMAND ops_test)
