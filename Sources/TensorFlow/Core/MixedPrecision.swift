@@ -147,20 +147,17 @@ extension Tensor {
   /// Returns true if the physical scalar type is reduced precision.
   ///
   /// Currently, reduced precision physical scalar types include only `BFloat16`.
-  public var isReducedPrecision: Bool {
-    @_semantics("autodiff.nonvarying")
-    get {
-        #if USING_X10_BACKEND
-          return device.backend == .XLA && xlaTensor.physicalScalarType == XLATensorScalarType_BFloat16
-        #else
-          // TODO: Implement.
-          return false
-        #endif
-      }
+  @noDerivative public var isReducedPrecision: Bool {
+    #if USING_X10_BACKEND
+      return device.backend == .XLA && xlaTensor.physicalScalarType == XLATensorScalarType_BFloat16
+    #else
+      // TODO: Implement.
+      return false
+    #endif
   }
 
   /// Promotes a scalar to a tensor with the same device and precision as the given tensor.
-  @differentiable(where Scalar: TensorFlowFloatingPoint)
+  @differentiable(where Scalar: TensorFlowFloatingPoint, wrt: value)
   public init(_ value: Scalar, deviceAndPrecisionLike tensor: Tensor) {
     let device = tensor.device
     let tmp = Tensor(value, on: device)
