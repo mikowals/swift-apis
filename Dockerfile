@@ -58,9 +58,9 @@ RUN cmake                                                                       
       -D CMAKE_Swift_COMPILER=/swift-tensorflow-toolchain/usr/bin/swiftc        \
       -D BUILD_X10=YES                                                          \
       -D USE_BUNDLED_CTENSORFLOW=YES                                            \
-      -D USE_BUNDLED_X10=YES                                                    \
       -G Ninja                                                                  \
       -S /swift-apis
+      
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --verbose
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --target install
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --target test
