@@ -1,7 +1,7 @@
 FROM gcr.io/swift-tensorflow/base-deps-cuda10.2-cudnn7-ubuntu18.04
 
 # Allows the caller to specify the toolchain to use.
-ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-notf-ubuntu18.04.tar.gz
+ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
 
 # Copy the kernel into the container
 COPY . /swift-apis
@@ -58,6 +58,7 @@ RUN cmake                                                                       
       -D CMAKE_Swift_COMPILER=/swift-tensorflow-toolchain/usr/bin/swiftc        \
       -D BUILD_X10=YES                                                          \
       -D USE_BUNDLED_CTENSORFLOW=YES                                            \
+      -D USE_BUNDLED_X10=YES                                                    \
       -G Ninja                                                                  \
       -S /swift-apis
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --verbose
