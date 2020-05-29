@@ -162,7 +162,7 @@ extension Tensor {
       self = isReducedPrecision ? tmp.toReducedPrecision : tmp
   }
   /// Promotes a scalar to a tensor with the same device and precision as the given tensor.
-  @differentiable(wrt value where Scalar: TensorFlowFloatingPoint)
+  @differentiable(wrt: value where Scalar: TensorFlowFloatingPoint)
   public init(_ value: Scalar, deviceAndPrecisionLike tensor: Tensor) {
     self.init(value, on: tensor.device, isReducedPrecision: tensor.isReducedPrecision)
   }
