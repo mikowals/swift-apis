@@ -1,9 +1,7 @@
 steps:
   - name: 'gcr.io/kaniko-project/executor:latest'
     args:
-    - --image=gcr.io/$PROJECT_ID/image
-    - --dockerfile=./Dockerfile
-    - --context=gcr.io/$PROJECT_ID/github.com/mikowals/swift-apis:$COMMIT_SHA
+    - --destination=gcr.io/$PROJECT_ID/image
     - --cache=true
     - --cache-ttl=6h
 timeout: 15000s
