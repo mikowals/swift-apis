@@ -134,7 +134,7 @@ public struct BatchNorm<Scalar: TensorFlowFloatingPoint>: Layer {
     }
     runningMean.value += (momentsMean - runningMean.value) * decayMomentum
     runningVariance.value += (momentsVariance - runningVariance.value) * decayMomentum
-    let eps = Tensor(epsilon, deviceAndPrecisionLike: input)
+    let eps = Tensor(epsilon, deviceAndPrecisionLike: withoutDerivative(at: input))
     return normalize(
       input,
       mean: moments.mean, variance: moments.variance,
@@ -150,7 +150,7 @@ public struct BatchNorm<Scalar: TensorFlowFloatingPoint>: Layer {
       isReducedPrecision ? runningVariance.value.toReducedPrecision : runningVariance.value
     let runningMeanValue =
       isReducedPrecision ? runningMean.value.toReducedPrecision : runningMean.value
-    let eps = Tensor(epsilon, deviceAndPrecisionLike: input)
+    let eps = Tensor(epsilon, deviceAndPrecisionLike: withoutDerivative(at: input))
     return normalize(
       input,
       mean: runningMeanValue, variance: runningVarianceValue,
