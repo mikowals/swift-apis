@@ -1,11 +1,4 @@
 steps:
-- name: 'gcr.io/cloud_builders/docker'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    export DOCKER_BUILDKIT=1 && \
-    export DOCKER_CLI_EXPERIMENTAL=enabled
 - name: 'docker'
   args: [
             'buildx', 'build',
@@ -14,6 +7,8 @@ steps:
             '-f', 'Dockerfile',
             '.'
         ]
+options:
+  env: ['DOCKER_BUILDKIT=1', 'DOCKER_CLI_EXPERIMENTAL=enabled']
 images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
 timeout: 15000s
 
