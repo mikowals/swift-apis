@@ -1,5 +1,11 @@
 steps:
 - name: 'docker'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    export DOCKER_BUILDKIT=1 || exit 0
+- name: 'docker'
   args: [
             'build',
             '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
