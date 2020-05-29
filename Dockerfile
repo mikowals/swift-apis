@@ -10,6 +10,7 @@ RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
     && tar -xzf swift.tar.gz --directory=usr --strip-components=1 \
     && rm swift.tar.gz
 
+
 # Add bazel and cmake repositories.
 RUN curl -qL https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add -
 RUN echo 'deb https://apt.kitware.com/ubuntu/ bionic main' >> /etc/apt/sources.list
