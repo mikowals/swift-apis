@@ -155,13 +155,16 @@ extension Tensor {
       return false
     #endif
   }
-
+  /// Promotes a scalar to a tensor with the specified device and precision
+  @differentiable(wrt: value where Scalar: TensorFlowFloatingPoint)
+  public init(_ value: Scalar, on device: Device = .default, isReducedPrecision: Bool = false) {
+      let tmp = Tensor(value, on: device)
+      self = isReducedPrecision ? tmp.toReducedPrecision : tmp
+  }
   /// Promotes a scalar to a tensor with the same device and precision as the given tensor.
-  //@differentiable(where Scalar: TensorFlowFloatingPoint)
+  @differentiable(wrt value where Scalar: TensorFlowFloatingPoint)
   public init(_ value: Scalar, deviceAndPrecisionLike tensor: Tensor) {
-    let device = tensor.device
-    let tmp = Tensor(value, on: device)
-    self = tensor.isReducedPrecision ? tmp.toReducedPrecision : tmp
+    self.init(value, on: tensor.device, isReducedPrecision: tensor.isReducedPrecision)
   }
 }
 
