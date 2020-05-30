@@ -1,5 +1,5 @@
 steps:
-- name: 'docker'
+- name: 'docker:v19.3.10'
   args: [
             'buildx', 'build',
             '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
