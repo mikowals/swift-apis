@@ -15,7 +15,7 @@ steps:
   args:
   - '-c'
   - |
-    pwd && ls
+    cd .. & pwd && ls
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   args: ['gsutil', '-m', 'cp', '-r', 'swift-apis/BinaryCache/tensorflow-swift-apis/libtensorflow-prefix', 'gs://nearline.mak-play.com/swift-apis/libtensorflow']
 images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
