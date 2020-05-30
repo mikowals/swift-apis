@@ -5,6 +5,5 @@ steps:
   - --cache=true
   - --cache-ttl=48h
 timeout: 5400s
-options:
-  machineType: 'N1_HIGHCPU_8'
+
 
