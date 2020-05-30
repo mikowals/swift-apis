@@ -1,5 +1,7 @@
 steps:
 - name: 'docker'
+  args: ['info']
+- name: 'docker'
   args: [
             'buildx', 'build',
             '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
@@ -10,5 +12,9 @@ steps:
 options:
   env: ['DOCKER_BUILDKIT=1', 'DOCKER_CLI_EXPERIMENTAL=enabled']
 images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
+artifacts:
+  objects:
+    location: 'gs://gs.mak-play.com/$PROJECT_ID/swift-apis'
+    paths: ['/BinaryCache/tensorflow-swift-apis/libtensorflow-prefix']
 timeout: 15000s
 
