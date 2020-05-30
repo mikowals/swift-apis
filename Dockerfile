@@ -33,11 +33,11 @@ RUN pip install -U pip six numpy wheel setuptools mock 'future>=0.17.1'         
 RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 
 # Copy the kernel into the container
+COPY ./Utilities /swift-apis/Utilities
 COPY ./CMakeLists.txt /swift-apis/CMakeLists.txt
 COPY ./cmake /swift-apis/cmake
-COPY ./Sources /swift-apis/Sources
 COPY ./Tests /swift-apis/Tests
-COPY ./Utilities /swift-apis/Utilities
+COPY ./Sources /swift-apis/Sources
 
 RUN if test -d /swift-apis/google-cloud-sdk; then \
   mv /swift-apis/google-cloud-sdk /opt/google-cloud-sdk; \
@@ -61,6 +61,7 @@ RUN cmake                                                                       
       -D CMAKE_INSTALL_PREFIX=/swift-tensorflow-toolchain/usr                   \
       -D CMAKE_Swift_COMPILER=/swift-tensorflow-toolchain/usr/bin/swiftc        \
       -D BUILD_X10=YES                                                          \
+      -D USE_BUNDELED_X10=YES
       -D USE_BUNDLED_CTENSORFLOW=YES                                            \
       -G Ninja                                                                  \
       -S /swift-apis
