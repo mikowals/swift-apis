@@ -1,4 +1,10 @@
 steps:
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    docker pull gcr.io/$PROJECT_ID/swift-apis:latest || exit 0
 - name: 'docker'
   args: [
             'build',
