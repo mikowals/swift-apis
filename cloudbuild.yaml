@@ -9,11 +9,10 @@ steps:
   args: [
             'build',
             '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
+            '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
             '-f', 'Dockerfile',
             '.'
         ]
-options:
-  env: ['DOCKER_BUILDKIT=1']
 images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
 timeout: 15000s
 
