@@ -1,4 +1,10 @@
 steps:
+- name: gcr.io/cloud-builders/docker
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    export DOCKER_CLI_EXPERIMENTAL=enabled
 - name: 'docker'
   args: ['info']
 - name: 'docker'
