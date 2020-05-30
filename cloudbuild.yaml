@@ -1,13 +1,13 @@
 steps:
 - name: 'docker'
   args: [
-            'build',
+            'buildx', 'build',
             '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
             '-f', 'Dockerfile',
             '.'
         ]
 options:
-    env: ['DOCKER_BUILDKIT=1']
+    env: ['DOCKER_CLI_EXPERIMENTAL=enabled']
 images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
 timeout: 15000s
 
