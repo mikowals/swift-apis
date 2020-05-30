@@ -11,7 +11,11 @@ steps:
          '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
          '.']
 - name: 'docker'
-  args: ['RUN', 'pwd']
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+    pwd && ls
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   args: ['gsutil', '-m', 'cp', '-r', 'swift-apis/BinaryCache/tensorflow-swift-apis/libtensorflow-prefix', 'gs://nearline.mak-play.com/swift-apis/libtensorflow']
 images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
