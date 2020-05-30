@@ -1,5 +1,5 @@
 steps:
-- name: 'docker'
+- name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args:
   - '-c'
