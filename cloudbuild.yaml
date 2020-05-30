@@ -1,23 +1,8 @@
 steps:
-- name: 'docker'
-  entrypoint: 'sh'
+- name: 'gcr.io/kaniko-project/executor:latest'
   args:
-  - '-c'
-  - |
-    docker pull gcr.io/$PROJECT_ID/swift-apis:latest || exit 0
-- name: 'docker'
-  args: ['build',
-         '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
-         '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
-         '.']
-- name: 'docker'
-  entrypoint: 'sh'
-  args:
-  - '-c'
-  - |
-    cd .. & pwd && ls
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ['gsutil', '-m', 'cp', '-r', '/BinaryCache/tensorflow-swift-apis', 'gs://nearline.mak-play.com/swift-apis/libtensorflow']
-images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
+  - --destination=gcr.io/$PROJECT_ID/image
+  - --cache=true
+  - --cache-ttl=48h
 timeout: 5400s
 

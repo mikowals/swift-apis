@@ -28,7 +28,7 @@ RUN apt-get -yq update                                                          
 RUN ln -s /usr/bin/bazel-2.0.0 /usr/bin/bazel
 RUN pip install -U pip six numpy wheel setuptools mock 'future>=0.17.1'         \
  && pip install -U --no-deps keras_applications keras_preprocessing
-
+RUN pip install tensorflow
 # Print out swift version for better debugging for toolchain problems
 RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 
