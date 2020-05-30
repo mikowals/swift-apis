@@ -60,7 +60,7 @@ if(BUILD_X10)
         COMMAND
           rm -rf <SOURCE_DIR>/bazel-bin # ${CMAKE_COMMAND} -E rm -Rrf <SOURCE_DIR>/bazel-bin
         COMMAND
-          bazel build -c opt --define framework_shared_object=false //tensorflow/compiler/tf2xla/xla_tensor:x10 --nocheck_visibility
+          bazel --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com --google_default_credentials build -c opt --define framework_shared_object=false //tensorflow/compiler/tf2xla/xla_tensor:x10 --nocheck_visibility
         COMMAND
           bazel shutdown
       INSTALL_COMMAND

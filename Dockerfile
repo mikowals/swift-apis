@@ -28,7 +28,6 @@ RUN apt-get -yq update                                                          
 RUN ln -s /usr/bin/bazel-2.0.0 /usr/bin/bazel
 RUN pip install -U pip six numpy wheel setuptools mock 'future>=0.17.1'         \
  && pip install -U --no-deps keras_applications keras_preprocessing
-RUN pip install tensorflow
 # Print out swift version for better debugging for toolchain problems
 RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 
@@ -38,16 +37,6 @@ COPY ./CMakeLists.txt /swift-apis/CMakeLists.txt
 COPY ./cmake /swift-apis/cmake
 COPY ./Tests /swift-apis/Tests
 COPY ./Sources /swift-apis/Sources
-
-RUN if test -d /swift-apis/google-cloud-sdk; then \
-  mv /swift-apis/google-cloud-sdk /opt/google-cloud-sdk; \
-  /opt/google-cloud-sdk/bin/gcloud auth list; \
-  echo "build --remote_cache=grpcs://remotebuildexecution.googleapis.com \
-    --auth_enabled=true \
-    --remote_instance_name=projects/tensorflow-swift/instances/s4tf-remote-bazel-caching \
-    --host_platform_remote_properties_override='properties:{name:\"cache-silo-key\" value:\"s4tf-basic-cache-key-cuda-10.2\"}'" >> ~/.bazelrc; \
-  cat ~/.bazelrc; \
-fi
 
 WORKDIR /swift-apis
 
