@@ -11,7 +11,7 @@ steps:
          '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
          '.']
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['-m', 'cp', '-r', '/BinaryCache/tensorflow-swift-apis/libtensorflow-prefix/src/libtensorflow', 'gs://nearline.mak-play.com/swift-apis/libtensorflow']
+  args: ['-m', 'cp', '-r', '/BinaryCache/tensorflow-swift-apis/libtensorflow-prefix', 'gs://nearline.mak-play.com/swift-apis/libtensorflow']
 images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
 timeout: 5400s
 
