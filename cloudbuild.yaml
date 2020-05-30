@@ -1,5 +1,5 @@
 steps:
-- name: 'docker:19.03.10'
+- name: 'docker:19.03.10-dind'
   args: [
             'build',
             '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
