@@ -62,9 +62,9 @@ if(BUILD_X10)
         COMMAND
           bazel clean
         COMMAND
-          bazel build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com --google_default_credentials -c opt --define framework_shared_object=false //tensorflow/compiler/tf2xla/xla_tensor:x10 --nocheck_visibility
+          bazel build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com --google_default_credentials -c opt --define framework_shared_object=false //tensorflow/compiler/tf2xla/xla_tensor:x10 --nocheck_visibility --jobs=4
         COMMAND
-          bazel shutdown
+          bazel shutdown OR pkill ^bazel OR true
       INSTALL_COMMAND
         "" # we do not do any installation, we fetch out the artifacts manually
       BUILD_IN_SOURCE

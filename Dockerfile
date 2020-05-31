@@ -50,7 +50,7 @@ RUN cmake                                                                       
       -G Ninja                                                                  \
       -S /swift-apis
       
-RUN cmake --build /BinaryCache/tensorflow-swift-apis --verbose
-RUN cmake --build /BinaryCache/tensorflow-swift-apis --target install
-RUN cmake --build /BinaryCache/tensorflow-swift-apis --target test
+RUN cmake --build /BinaryCache/tensorflow-swift-apis --verbose -j4
+RUN cmake --build /BinaryCache/tensorflow-swift-apis --target install -j4
+RUN cmake --build /BinaryCache/tensorflow-swift-apis --target test -j4
 
