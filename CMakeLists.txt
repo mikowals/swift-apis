@@ -60,11 +60,9 @@ if(BUILD_X10)
         COMMAND
           rm -rf <SOURCE_DIR>/bazel-bin # ${CMAKE_COMMAND} -E rm -Rrf <SOURCE_DIR>/bazel-bin
         COMMAND
-          bazel clean
+          bazel build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com --google_default_credentials -c opt --define framework_shared_object=false //tensorflow/compiler/tf2xla/xla_tensor:x10 --nocheck_visibility --jobs=8
         COMMAND
-          bazel build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com --google_default_credentials -c opt --define framework_shared_object=false //tensorflow/compiler/tf2xla/xla_tensor:x10 --nocheck_visibility --jobs=8 --batch
-        COMMAND
-          bazel shutdown
+          bazel shutdown # ${CMAKE_COMMAND} pkill bazel
       INSTALL_COMMAND
         "" # we do not do any installation, we fetch out the artifacts manually
       BUILD_IN_SOURCE
