@@ -4,5 +4,7 @@ steps:
   - --destination=gcr.io/$PROJECT_ID/image
   - --cache=true
   - --cache-ttl=48h
-timeout: 2400s
+timeout: 5400s
+options:
+  machineType: 'N1_HIGHCPU_8'
 
