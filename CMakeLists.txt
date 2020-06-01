@@ -75,7 +75,7 @@ if(BUILD_X10)
       USES_TERMINAL_BUILD
         TRUE
       STEP_TARGETS
-        build
+        build) # end of ExternalProject_add
     ExternalProject_Get_Property(libtensorflow SOURCE_DIR)
 
     set(X10_LIBRARY ${SOURCE_DIR}/bazel-bin/tensorflow/compiler/tf2xla/xla_tensor/${CMAKE_SHARED_LIBRARY_PREFIX}x10${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -95,13 +95,12 @@ if(BUILD_X10)
 endif()
 
 if(BUILD_X10)
+  add_library(tensorflow UNKNOWN IMPORTED)
   if(NOT X10_FOUND AND NOT USE_BUNDLED_X10)
-    add_library(tensorflow UNKNOWN IMPORTED)
     set_target_properties(tensorflow PROPERTIES
       IMPORTED_LOCATION ${X10_LIBRARY}
       INTERFACE_INCLUDE_DIRECTORIES "${SOURCE_DIR}")
   else()
-    add_library(tensorflow UNKNOWN IMPORTED)
     set_target_properties(tensorflow PROPERTIES
       IMPORTED_LOCATION ${X10_LIBRARY}
       INTERFACE_INCLUDE_DIRECTORIES "${X10_INCLUDE_DIRS}")
