@@ -1,8 +1,14 @@
 steps:
-- name: 'gcr.io/kaniko-project/executor:latest'
+- name: 'docker'
+  entrypoint: 'sh'
   args:
-  - --destination=gcr.io/$PROJECT_ID/image
-  - --cache=true
-  - --cache-ttl=48h
-timeout: 2400s
-
+  - '-c'
+  - |
+    docker pull gcr.io/$PROJECT_ID/swift-apis:latest || exit 0
+- name: 'docker'
+  args: ['build',
+         '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
+         '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
+         '.']
+images: ['gcr.io/$PROJECT_ID/swift-apis:latest']
+timeout: 5400s
