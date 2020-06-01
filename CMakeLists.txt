@@ -75,7 +75,7 @@ if(BUILD_X10)
       USES_TERMINAL_BUILD
         TRUE
       STEP_TARGETS
-        build)
+        build
     ExternalProject_Get_Property(libtensorflow SOURCE_DIR)
 
     set(X10_LIBRARY ${SOURCE_DIR}/bazel-bin/tensorflow/compiler/tf2xla/xla_tensor/${CMAKE_SHARED_LIBRARY_PREFIX}x10${CMAKE_SHARED_LIBRARY_SUFFIX})
