@@ -58,33 +58,5 @@ RUN cmake --build /BinaryCache/tensorflow-swift-apis --verbose
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --target install
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --target test
 
-WORKDIR /
-RUN git clone https://github.com/tensorflow/swift-models.git
-RUN git clone https://github.com/fastai/fastai_dev.git
-RUN git clone https://github.com/deepmind/open_spiel.git
-
-WORKDIR /swift-models
-
-RUN /swift-tensorflow-toolchain/usr/bin/swift build
-RUN /swift-tensorflow-toolchain/usr/bin/swift build -c release
-
-WORKDIR /fastai_dev/swift/FastaiNotebook_11_imagenette
-
-RUN /swift-tensorflow-toolchain/usr/bin/swift build
-RUN /swift-tensorflow-toolchain/usr/bin/swift build -c release
-
-WORKDIR /open_spiel
-RUN /swift-tensorflow-toolchain/usr/bin/swift test
-
-WORKDIR /swift-apis
-# TODO: move into bash scripts...
-RUN rm -f /swift-tensorflow-toolchain/usr/lib/swift/linux/x86_64/TensorFlow.swiftinterface
-RUN rm -f /swift-tensorflow-toolchain/usr/lib/swift/linux/x86_64/TensorFlow.swiftdoc
-RUN rm -f /swift-tensorflow-toolchain/usr/lib/swift/linux/x86_64/TensorFlow.swiftmodule
-RUN rm -f /swift-tensorflow-toolchain/usr/lib/swift/linux/libswiftTensorFlow.so
-
-# Benchmark compile times
-RUN python3 Utilities/benchmark_compile.py /swift-tensorflow-toolchain/usr/bin/swift benchmark_results.xml
-
 # Run SwiftPM tests
 RUN /swift-tensorflow-toolchain/usr/bin/swift test
