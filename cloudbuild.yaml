@@ -1,0 +1,13 @@
+steps:
+- name: 'docker'
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+    docker pull gcr.io/$PROJECT_ID/swift-apis:latest || exit 0
+- name: 'docker'
+  args: ['build',
+         '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
+         '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
+         '.']
+timeout: 5400s

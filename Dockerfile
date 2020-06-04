@@ -1,20 +1,12 @@
 FROM gcr.io/swift-tensorflow/base-deps-cuda10.2-cudnn7-ubuntu18.04
 
 # Allows the caller to specify the toolchain to use.
-ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-notf-ubuntu18.04.tar.gz
+ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
 
 # Copy the kernel into the container
 COPY . /swift-apis
 
-RUN if test -d /swift-apis/google-cloud-sdk; then \
-  mv /swift-apis/google-cloud-sdk /opt/google-cloud-sdk; \
-  /opt/google-cloud-sdk/bin/gcloud auth list; \
-  echo "build --remote_cache=grpcs://remotebuildexecution.googleapis.com \
-    --auth_enabled=true \
-    --remote_instance_name=projects/tensorflow-swift/instances/s4tf-remote-bazel-caching \
-    --host_platform_remote_properties_override='properties:{name:\"cache-silo-key\" value:\"s4tf-basic-cache-key-cuda-10.2\"}'" >> ~/.bazelrc; \
-  cat ~/.bazelrc; \
-fi
+RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \ --google_default_credentials" cat ~/.bazelrc; 
 
 # Download and extract S4TF
 WORKDIR /swift-tensorflow-toolchain
@@ -56,9 +48,12 @@ RUN cmake                                                                       
       -D CMAKE_BUILD_TYPE=Release                                               \
       -D CMAKE_INSTALL_PREFIX=/swift-tensorflow-toolchain/usr                   \
       -D CMAKE_Swift_COMPILER=/swift-tensorflow-toolchain/usr/bin/swiftc        \
+      -D USE_BUNDLED_CTENSORFLOW=YES                                            \
+      -D USE_BUNDLED_X10=YES                                                    \
       -D BUILD_X10=YES                                                          \
       -G Ninja                                                                  \
       -S /swift-apis
+      
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --verbose
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --target install
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --target test
