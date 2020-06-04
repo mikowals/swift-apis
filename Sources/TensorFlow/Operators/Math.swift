@@ -435,28 +435,28 @@ extension Tensor where Scalar: Numeric {
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func + (lhs: Scalar, rhs: Tensor) -> Tensor {
-    return Tensor(lhs, deviceAndPrecisionLike: rhs) + rhs
+    return Tensor(lhs, deviceAndPrecisionLike: withoutDerivative(at: rhs)) + rhs
   }
 
   /// Adds the scalar to every scalar of the tensor and produces the sum.
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func + (lhs: Tensor, rhs: Scalar) -> Tensor {
-    return lhs + Tensor(rhs, deviceAndPrecisionLike: lhs)
+    return lhs + Tensor(rhs, deviceAndPrecisionLike: withoutDerivative(at: lhs))
   }
 
   /// Subtracts the scalar from every scalar of the tensor and produces the difference.
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func - (lhs: Scalar, rhs: Tensor) -> Tensor {
-    return Tensor(lhs, deviceAndPrecisionLike: rhs) - rhs
+    return Tensor(lhs, deviceAndPrecisionLike: withoutDerivative(at: rhs)) - rhs
   }
 
   /// Subtracts the scalar from every scalar of the tensor and produces the difference
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func - (lhs: Tensor, rhs: Scalar) -> Tensor {
-    return lhs - Tensor(rhs, deviceAndPrecisionLike: lhs)
+    return lhs - Tensor(rhs, deviceAndPrecisionLike: withoutDerivative(at: lhs))
   }
 
   /// Adds two tensors and stores the result in the left-hand-side variable.
@@ -500,14 +500,14 @@ extension Tensor where Scalar: Numeric {
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func * (lhs: Scalar, rhs: Tensor) -> Tensor {
-    return Tensor(lhs, deviceAndPrecisionLike: rhs) * rhs
+    return Tensor(lhs, deviceAndPrecisionLike: withoutDerivative(at: rhs)) * rhs
   }
 
   /// Multiplies the scalar with every scalar of the tensor and produces the product.
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func * (lhs: Tensor, rhs: Scalar) -> Tensor {
-    return lhs * Tensor(rhs, deviceAndPrecisionLike: lhs)
+    return lhs * Tensor(rhs, deviceAndPrecisionLike: withoutDerivative(at: lhs))
   }
 
   /// Multiplies two tensors and stores the result in the left-hand-side variable.
@@ -536,14 +536,14 @@ extension Tensor where Scalar: Numeric {
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func / (lhs: Scalar, rhs: Tensor) -> Tensor {
-    return Tensor(lhs, deviceAndPrecisionLike: rhs) / rhs
+    return Tensor(lhs, deviceAndPrecisionLike: withoutDerivative(at: rhs)) / rhs
   }
 
   /// Returns the quotient of dividing the tensor by the scalar, broadcasting the scalar.
   @inlinable
   @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func / (lhs: Tensor, rhs: Scalar) -> Tensor {
-    return lhs / Tensor(rhs, deviceAndPrecisionLike: lhs)
+    return lhs / Tensor(rhs, deviceAndPrecisionLike: withoutDerivative(at: lhs))
   }
 
   /// Divides the first tensor by the second and stores the quotient in the left-hand-side
@@ -812,14 +812,18 @@ extension Tensor where Scalar: TensorFlowNumeric {
   @inlinable
   @differentiable(wrt: (self, min) where Scalar: TensorFlowFloatingPoint)
   public func clipped(min: Tensor, max: Scalar) -> Tensor {
-    clipped(min: min, max: Tensor(max, deviceAndPrecisionLike: self))
+    clipped(
+        min: min,
+        max: Tensor(max, deviceAndPrecisionLike: withoutDerivative(at: self)))
   }
 
   /// Returns `max(min(self, max), min)`.
   @inlinable
   @differentiable(wrt: (self, max) where Scalar: TensorFlowFloatingPoint)
   public func clipped(min: Scalar, max: Tensor) -> Tensor {
-    clipped(min: Tensor(min, deviceAndPrecisionLike: self), max: max)
+    clipped(
+        min: Tensor(min, deviceAndPrecisionLike: withoutDerivative(at: self)),
+        max: max)
   }
 
   /// Returns `max(min(self, max), min)`.
@@ -827,8 +831,8 @@ extension Tensor where Scalar: TensorFlowNumeric {
   @differentiable(wrt: self where Scalar: TensorFlowFloatingPoint)
   public func clipped(min: Scalar, max: Scalar) -> Tensor {
     clipped(
-      min: Tensor(min, deviceAndPrecisionLike: self),
-      max: Tensor(max, deviceAndPrecisionLike: self))
+      min: Tensor(min, deviceAndPrecisionLike: withoutDerivative(at: self)),
+      max: Tensor(max, deviceAndPrecisionLike: withoutDerivative(at: self)))
   }
 }
 
@@ -1365,7 +1369,6 @@ func _vjpElu<T: TensorFlowFloatingPoint>(
 @inlinable
 @differentiable
 public func gelu<T: TensorFlowFloatingPoint>(_ x: Tensor<T>) -> Tensor<T> {
-  // Use withoutDerivative to prevent device mismatch in pullback.
   let xWithoutDerivative = withoutDerivative(at: x)
   // An approximation of √(2/π).
   let ratio1 = Tensor<T>(0.7978845608, deviceAndPrecisionLike: xWithoutDerivative)
@@ -1542,21 +1545,21 @@ public func pow<T: TensorFlowFloatingPoint>(_ lhs: Tensor<T>, _ rhs: Tensor<T>) 
 @inlinable
 @differentiable(wrt: rhs where T: TensorFlowFloatingPoint)
 public func pow<T: TensorFlowFloatingPoint>(_ lhs: T, _ rhs: Tensor<T>) -> Tensor<T> {
-  pow(Tensor(lhs, deviceAndPrecisionLike: rhs), rhs)
+  pow(Tensor(lhs, deviceAndPrecisionLike: withoutDerivative(at: rhs)), rhs)
 }
 
 /// Returns the power of the tensor to the scalar, broadcasting the scalar.
 @inlinable
 @differentiable(wrt: lhs where T: TensorFlowFloatingPoint)
 public func pow<T: TensorFlowFloatingPoint>(_ lhs: Tensor<T>, _ rhs: T) -> Tensor<T> {
-  pow(lhs, Tensor(rhs, deviceAndPrecisionLike: lhs))
+  pow(lhs, Tensor(rhs, deviceAndPrecisionLike: withoutDerivative(at: lhs)))
 }
 
 /// Returns the power of the tensor to the scalar, broadcasting the scalar.
 @inlinable
 @differentiable
 public func pow<T: TensorFlowFloatingPoint>(_ x: Tensor<T>, _ n: Int) -> Tensor<T> {
-  pow(x, Tensor(T(n), deviceAndPrecisionLike: x))
+  pow(x, Tensor(T(n), deviceAndPrecisionLike: withoutDerivative(at: x)))
 }
 
 /// Returns the element-wise `n`th root of the tensor.
@@ -1616,14 +1619,14 @@ internal func _vjpMax<T: TensorFlowFloatingPoint>(
 @inlinable
 @differentiable(wrt: rhs where T: TensorFlowFloatingPoint)
 public func max<T>(_ lhs: T, _ rhs: Tensor<T>) -> Tensor<T> where T: Numeric & Comparable {
-  max(Tensor(lhs, deviceAndPrecisionLike: rhs), rhs)
+  max(Tensor(lhs, deviceAndPrecisionLike: withoutDerivative(at: rhs)), rhs)
 }
 
 /// Returns the element-wise maximum of the scalar and the tensor, broadcasting the scalar.
 @inlinable
 @differentiable(wrt: lhs where T: TensorFlowFloatingPoint)
 public func max<T>(_ lhs: Tensor<T>, _ rhs: T) -> Tensor<T> where T: Numeric & Comparable {
-  max(lhs, Tensor(rhs, deviceAndPrecisionLike: lhs))
+  max(lhs, Tensor(rhs, deviceAndPrecisionLike: withoutDerivative(at: lhs)))
 }
 
 /// Returns the element-wise minimum of two tensors.
@@ -1653,14 +1656,14 @@ internal func _vjpMin<T: TensorFlowFloatingPoint>(
 @inlinable
 @differentiable(wrt: rhs where T: TensorFlowFloatingPoint)
 public func min<T>(_ lhs: T, _ rhs: Tensor<T>) -> Tensor<T> where T: Numeric & Comparable {
-  min(Tensor(lhs, deviceAndPrecisionLike: rhs), rhs)
+  min(Tensor(lhs, deviceAndPrecisionLike: withoutDerivative(at: rhs)), rhs)
 }
 
 /// Returns the element-wise minimum of the scalar and the tensor, broadcasting the scalar.
 @inlinable
 @differentiable(wrt: lhs where T: TensorFlowFloatingPoint)
 public func min<T>(_ lhs: Tensor<T>, _ rhs: T) -> Tensor<T> where T: Numeric & Comparable {
-  min(lhs, Tensor(rhs, deviceAndPrecisionLike: lhs))
+  min(lhs, Tensor(rhs, deviceAndPrecisionLike: withoutDerivative(at: lhs)))
 }
 
 // Note: adapted from `_MinOrMaxGrad`:
