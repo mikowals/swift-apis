@@ -1,4 +1,4 @@
-FROM gcr.io/swift-tensorflow/base-deps-cuda10.2-cudnn7-ubuntu18.04
+FROM ubuntu:18.04
 
 # Allows the caller to specify the toolchain to use.
 ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
@@ -39,7 +39,7 @@ COPY . /swift-apis
 WORKDIR /swift-apis
 
 # Perform CMake based build
-ENV TF_NEED_CUDA=1
+ENV TF_NEED_CUDA=0
 ENV CTEST_OUTPUT_ON_FAILURE=1
 RUN cmake                                                                       \
       -B /BinaryCache/tensorflow-swift-apis                                     \
