@@ -3,9 +3,6 @@ FROM gcr.io/swift-tensorflow/base-deps-cuda10.2-cudnn7-ubuntu18.04
 # Allows the caller to specify the toolchain to use.
 ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
 
-# Copy the kernel into the container
-COPY . /swift-apis
-
 RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \ --google_default_credentials" cat ~/.bazelrc; 
 
 # Download and extract S4TF
@@ -37,6 +34,8 @@ RUN pip install -U pip six numpy wheel setuptools mock 'future>=0.17.1'         
 # Print out swift version for better debugging for toolchain problems
 RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 
+# Copy the kernel into the container
+COPY . /swift-apis
 WORKDIR /swift-apis
 
 # Perform CMake based build
