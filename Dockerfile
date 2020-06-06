@@ -6,18 +6,12 @@ ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/night
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 
-RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \ --google_default_credentials" cat ~/.bazelrc;
+RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \
+    --google_default_credentials" cat ~/.bazelrc;
 
 RUN apt-get -yq update \
     && apt-get -yq install --no-install-recommends curl ca-certificates gnupg2 libxml2 \
     && apt-get clean
-    
-# Download and extract S4TF
-WORKDIR /swift-tensorflow-toolchain
-RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
-    && mkdir usr \
-    && tar -xzf swift.tar.gz --directory=usr --strip-components=1 \
-    && rm swift.tar.gz
 
 # Add bazel and cmake repositories.
 RUN curl -qL https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add -
@@ -36,6 +30,12 @@ RUN ln -s /usr/bin/bazel-2.0.0 /usr/bin/bazel
 RUN pip install -U pip six numpy wheel setuptools mock 'future>=0.17.1'         \
  && pip install -U --no-deps keras_applications keras_preprocessing
 
+# Download and extract S4TF
+WORKDIR /swift-tensorflow-toolchain
+RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
+    && mkdir usr \
+    && tar -xzf swift.tar.gz --directory=usr --strip-components=1 \
+    && rm swift.tar.gz
 # Print out swift version for better debugging for toolchain problems
 RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 
