@@ -6,7 +6,7 @@ ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/night
 RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \ --google_default_credentials" cat ~/.bazelrc; 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
-RUN apt-get -yq update && apt-get -yq install curl
+RUN apt-get -yq update && apt-get -yq install curl gnupg2
 # Download and extract S4TF
 WORKDIR /swift-tensorflow-toolchain
 RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
