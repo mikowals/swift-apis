@@ -22,7 +22,8 @@ RUN curl -qL https://bazel.build/bazel-release.pub.gpg | apt-key add -
 RUN echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8' >> /etc/apt/sources.list.d/bazel.list
 
 # Install bazel, cmake, ninja, python, and python dependencies
-RUN apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build   \
+RUN apt-get -yq update \
+ && apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build   \
  && apt-get -yq install --no-install-recommends python-dev python-pip           \
  && apt-get clean                                                               \
  && rm -rf /tmp/* /var/tmp/* /var/lib/apt/archive/* /var/lib/apt/lists/*
