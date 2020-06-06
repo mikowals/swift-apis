@@ -2,13 +2,14 @@ FROM ubuntu:18.04
 
 # Allows the caller to specify the toolchain to use.
 ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
+
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 
 RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \ --google_default_credentials" cat ~/.bazelrc;
 
 RUN apt-get -yq update \
-    && apt-get -yq install --no-install-recommends curl gnupg2 libxml2 \
+    && apt-get -yq install --no-install-recommends curl ca-certificates gnupg2 libxml2 \
     && apt-get clean
     
 # Download and extract S4TF
