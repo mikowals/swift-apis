@@ -4,8 +4,9 @@ FROM ubuntu:18.04
 ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
 
 RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \ --google_default_credentials" cat ~/.bazelrc; 
+ARG DEBIAN_FRONTEND=noninteractive
+ARG DEBCONF_NONINTERACTIVE_SEEN=true
 RUN apt-get -yq update && apt-get -yq install curl
-
 # Download and extract S4TF
 WORKDIR /swift-tensorflow-toolchain
 RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
@@ -21,9 +22,6 @@ RUN curl -qL https://bazel.build/bazel-release.pub.gpg | apt-key add -
 RUN echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8' >> /etc/apt/sources.list.d/bazel.list
 
 # Install bazel, cmake, ninja, python, and python dependencies
-ARG DEBIAN_FRONTEND=noninteractive
-ARG DEBCONF_NONINTERACTIVE_SEEN=true
-                                                          \
 RUN apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build   \
  && apt-get -yq install --no-install-recommends python-dev python-pip           \
  && apt-get clean                                                               \
