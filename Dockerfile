@@ -8,8 +8,9 @@ ARG sccache_binary_url=https://github.com/mozilla/sccache/releases/download/0.2.
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 
-RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com \
-    --google_default_credentials" cat ~/.bazelrc;
+RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
+    --google_default_credentials" >> ~/.bazelrc;  \
+    cat ~/.bazelrc;
 
 RUN apt-get -yq update \
     && apt-get -yq install --no-install-recommends curl ca-certificates gnupg2 libxml2 \
