@@ -3,6 +3,8 @@ FROM ubuntu:18.04
 # Allows the caller to specify the toolchain to use.
 ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
 
+ARG sccache_binary_url=https://github.com/mozilla/sccache/releases/download/0.2.13/sccache-0.2.13-x86_64-unknown-linux-musl.tar.gz
+
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 
@@ -22,7 +24,7 @@ RUN echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.
 
 # Install bazel, cmake, ninja, python, and python dependencies
 RUN apt-get -yq update \
- && apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build sccache  \
+ && apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build  \
  && apt-get -yq install --no-install-recommends python-setuptools python-dev python-pip  \
  && apt-get clean                                                               \
  && rm -rf /tmp/* /var/tmp/* /var/lib/apt/archive/* /var/lib/apt/lists/*
@@ -36,6 +38,11 @@ RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
     && mkdir usr \
     && tar -xzf swift.tar.gz --directory=usr --strip-components=1 \
     && rm swift.tar.gz
+
+RUN curl -fSsL sccache_binary_url -o sccache.tar.gz \
+    && tar -xzf sccache.tar.gz --directory=usr --strip-components=1 \
+    && rm sccache.tar.gz
+    
 # Print out swift version for better debugging for toolchain problems
 RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 
