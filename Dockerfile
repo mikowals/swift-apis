@@ -22,8 +22,8 @@ RUN echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.
 
 # Install bazel, cmake, ninja, python, and python dependencies
 RUN apt-get -yq update \
- && apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build   \
- && apt-get -yq install --no-install-recommends python-setuptools python-dev python-pip    \
+ && apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build sccache  \
+ && apt-get -yq install --no-install-recommends python-setuptools python-dev python-pip  \
  && apt-get clean                                                               \
  && rm -rf /tmp/* /var/tmp/* /var/lib/apt/archive/* /var/lib/apt/lists/*
 RUN ln -s /usr/bin/bazel-2.0.0 /usr/bin/bazel
@@ -46,6 +46,9 @@ WORKDIR /swift-apis
 # Perform CMake based build
 ENV TF_NEED_CUDA=0
 ENV CTEST_OUTPUT_ON_FAILURE=1
+ENV SCCACHE_GCS_RW_MODE=READ_WRITE
+ENV SCCACHE_GCS_BUCKET=gs.mak-play.com
+
 RUN cmake                                                                       \
       -B /BinaryCache/tensorflow-swift-apis                                     \
       -D BUILD_SHARED_LIBS=YES                                                  \
@@ -55,6 +58,8 @@ RUN cmake                                                                       
       -D USE_BUNDLED_CTENSORFLOW=YES                                            \
       -D USE_BUNDLED_X10=YES                                                    \
       -D BUILD_X10=YES                                                          \
+      -D CMAKE_CXX_COMPILER_LAUNCHER=sccache                                    \
+      -D CMAKE_C_COMPILER_LAUNCHER=sccache                                      \
       -G Ninja                                                                  \
       -S /swift-apis
       
@@ -63,4 +68,4 @@ RUN cmake --build /BinaryCache/tensorflow-swift-apis --target install
 RUN cmake --build /BinaryCache/tensorflow-swift-apis --target test
 
 # Run SwiftPM tests
-RUN /swift-tensorflow-toolchain/usr/bin/swift test
+# RUN /swift-tensorflow-toolchain/usr/bin/swift test
