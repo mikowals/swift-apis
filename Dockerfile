@@ -11,11 +11,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 RUN if [ -z "$key_file" ]; then \
       echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
-      --google_default_credentials" >> ~/.bazelrc; \
+      --google_default_credentials" >> $HOME/.bazelrc; \
     else \
       echo "$key_file" | base64 --decode > ${HOME}/key_file.json; \
       echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
-        --google_credentials=${HOME}/key_file.json" >> ~/.bazelrc; \
+        --google_credentials=${HOME}/key_file.json" >> $HOME/.bazelrc; \
       cat ${HOME}/key_file.json; \
     fi
     
