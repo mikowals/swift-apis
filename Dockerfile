@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 # Allows the caller to specify the toolchain to use.
-ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
+ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-notf-ubuntu18.04.tar.gz
 
 ARG sccache_binary_url=https://github.com/mozilla/sccache/releases/download/0.2.13/sccache-0.2.13-x86_64-unknown-linux-musl.tar.gz
 
@@ -63,8 +63,6 @@ RUN cmake                                                                       
       -D CMAKE_BUILD_TYPE=Release                                               \
       -D CMAKE_INSTALL_PREFIX=/swift-tensorflow-toolchain/usr                   \
       -D CMAKE_Swift_COMPILER=/swift-tensorflow-toolchain/usr/bin/swiftc        \
-      -D USE_BUNDLED_CTENSORFLOW=YES                                            \
-      -D USE_BUNDLED_X10=YES                                                    \
       -D BUILD_X10=YES                                                          \
       -D CMAKE_CXX_COMPILER_LAUNCHER=sccache                                    \
       -D CMAKE_C_COMPILER_LAUNCHER=sccache                                      \
