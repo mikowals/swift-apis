@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM gcr.io/swift-tensorflow/base-deps-cuda10.2-cudnn7-ubuntu18.04
 
 # Allows the caller to specify the toolchain to use.
 ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-notf-ubuntu18.04.tar.gz
@@ -34,8 +34,8 @@ RUN echo 'deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.
 
 # Install bazel, cmake, ninja, python, and python dependencies
 RUN apt-get -yq update \
- && apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build git  \
- && apt-get -yq install --no-install-recommends python-setuptools python-dev python-pip  \
+ && apt-get -yq install --no-install-recommends bazel-2.0.0 cmake ninja-build  \
+ && apt-get -yq install --no-install-recommends python-dev python-pip  \
  && apt-get clean                                                               \
  && rm -rf /tmp/* /var/tmp/* /var/lib/apt/archive/* /var/lib/apt/lists/*
 RUN ln -s /usr/bin/bazel-2.0.0 /usr/bin/bazel
