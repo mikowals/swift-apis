@@ -63,6 +63,7 @@ RUN cmake                                                                       
       -D CMAKE_BUILD_TYPE=Release                                               \
       -D CMAKE_INSTALL_PREFIX=/swift-tensorflow-toolchain/usr                   \
       -D CMAKE_Swift_COMPILER=/swift-tensorflow-toolchain/usr/bin/swiftc        \
+      -D BUILD_X10=YES                                                          \
       -D CMAKE_CXX_COMPILER_LAUNCHER=sccache                                    \
       -D CMAKE_C_COMPILER_LAUNCHER=sccache                                      \
       -G Ninja                                                                  \
