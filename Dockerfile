@@ -13,10 +13,10 @@ RUN if [ -z "$key_file" ]; then \
       echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
       --google_default_credentials" >> ~/.bazelrc; \
     else \
-      echo "$key_file" | base64 --decode > $HOME/key_file.json; \
+      echo "$key_file" | base64 --decode > ${HOME}/key_file.json; \
       echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
-        --google_credentials=$HOME/key_file.json" >> ~/.bazelrc; \
-      cat $HOME/key_file.json; \
+        --google_credentials=${HOME}/key_file.json" >> ~/.bazelrc; \
+      cat ${HOME}/key_file.json; \
     fi
     
 RUN cat ~/.bazelrc;
@@ -64,7 +64,7 @@ ENV TF_NEED_CUDA=0
 ENV CTEST_OUTPUT_ON_FAILURE=1
 ENV SCCACHE_GCS_RW_MODE=READ_WRITE
 ENV SCCACHE_GCS_BUCKET=gs.mak-play.com
-ENV SCCACHE_GCS_KEY_PATH=$HOME/key_file.json
+ENV SCCACHE_GCS_KEY_PATH=${HOME}/key_file.json
 ENV RUST_LOG=info,error,warn
 
 RUN cmake                                                                       \
