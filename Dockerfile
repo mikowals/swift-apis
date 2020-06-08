@@ -55,6 +55,7 @@ ENV TF_NEED_CUDA=0
 ENV CTEST_OUTPUT_ON_FAILURE=1
 ENV SCCACHE_GCS_RW_MODE=READ_WRITE
 ENV SCCACHE_GCS_BUCKET=gs.mak-play.com
+ENV RUST_LOG=info,error,warn
 
 RUN cmake                                                                       \
       -B /BinaryCache/tensorflow-swift-apis                                     \
