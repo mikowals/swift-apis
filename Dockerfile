@@ -5,19 +5,20 @@ ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/night
 
 ARG sccache_binary_url=https://github.com/mozilla/sccache/releases/download/0.2.13/sccache-0.2.13-x86_64-unknown-linux-musl.tar.gz
 
-ARG key_file
+ARG key_file=""
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
-RUN if [[ -z "$key_file" ]]; then \
+RUN if [ -z "$key_file" ]; then \
       echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
       --google_default_credentials" >> ~/.bazelrc; \
     else \
-      echo $key_file | base64 --decode > ~/key_file.json; \
+      echo "$key_file" | base64 --decode > ~/key_file.json; \
       echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
-        --google_credentials=~/key_file.json" >> ~/.bazelrc; \
+        --google_credentials=key_file.json" >> ~/.bazelrc; \
     fi
 
+RUN cat ~/.bazelrc; cat ~/key_file.json;
 RUN apt-get -yq update \
     && apt-get -yq install --no-install-recommends curl ca-certificates gnupg2 libxml2 \
     && apt-get clean
@@ -55,6 +56,7 @@ RUN /swift-tensorflow-toolchain/usr/bin/swift --version
 
 # Copy the kernel into the container
 COPY . /swift-apis
+RUN mv ~/key_file.json /swift-apis/key_file.json
 WORKDIR /swift-apis
 
 # Perform CMake based build
@@ -62,6 +64,7 @@ ENV TF_NEED_CUDA=0
 ENV CTEST_OUTPUT_ON_FAILURE=1
 ENV SCCACHE_GCS_RW_MODE=READ_WRITE
 ENV SCCACHE_GCS_BUCKET=gs.mak-play.com
+ENV SCCACHE_GCS_KEY_PATH=key_file.json
 ENV RUST_LOG=info,error,warn
 
 RUN cmake                                                                       \
