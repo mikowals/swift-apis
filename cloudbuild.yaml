@@ -9,6 +9,7 @@ steps:
   args: ['build',
          '-t', 'gcr.io/$PROJECT_ID/swift-apis:latest',
          '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
+         '--build-arg', 'key_file=${_KEY_FILE}',
          '.']
 timeout: 5400s
 options:
