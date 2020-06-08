@@ -39,7 +39,7 @@ RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
     && tar -xzf swift.tar.gz --directory=usr --strip-components=1 \
     && rm swift.tar.gz
 
-RUN curl -fSsL sccache_binary_url -o sccache.tar.gz \
+RUN curl -fSsL $sccache_binary_url -o sccache.tar.gz \
     && tar -xzf sccache.tar.gz --directory=usr --strip-components=1 \
     && rm sccache.tar.gz
     
