@@ -5,12 +5,18 @@ ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/night
 
 ARG sccache_binary_url=https://github.com/mozilla/sccache/releases/download/0.2.13/sccache-0.2.13-x86_64-unknown-linux-musl.tar.gz
 
+ARG key_file=""
+
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
-
-RUN echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
-    --google_default_credentials" >> ~/.bazelrc;  \
-    cat ~/.bazelrc;
+RUN if [ $key_file = "" ]; then \
+      echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
+      --google_default_credentials" >> ~/.bazelrc;
+    else \
+      echo $key_file | base64 --decode > ~/key_file.json; \
+      echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
+        --google__credentials=~/key_file.json" >> ~/.bazelrc;  \
+    fi
 
 RUN apt-get -yq update \
     && apt-get -yq install --no-install-recommends curl ca-certificates gnupg2 libxml2 \
