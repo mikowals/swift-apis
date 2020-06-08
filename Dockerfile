@@ -15,7 +15,7 @@ RUN if [ $key_file = "" ]; then \
     else \
       echo $key_file | base64 --decode > ~/key_file.json; \
       echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
-        --google__credentials=~/key_file.json" >> ~/.bazelrc; \
+        --google_credentials=~/key_file.json" >> ~/.bazelrc; \
     fi
 
 RUN apt-get -yq update \
