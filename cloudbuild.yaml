@@ -11,3 +11,5 @@ steps:
          '--cache-from', 'gcr.io/$PROJECT_ID/swift-apis:latest',
          '.']
 timeout: 5400s
+options:
+ machineType: N1_HIGHCPU_32
