@@ -12,5 +12,4 @@ steps:
          '--build-arg', 'key_file=${_KEY_FILE}',
          '.']
 timeout: 5400s
-options:
- machineType: N1_HIGHCPU_32
+

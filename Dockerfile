@@ -15,15 +15,15 @@ RUN if [ -z "${key_file}" ]; then \
       --google_default_credentials" >> "${HOME}"/.bazelrc; \
     else \
       echo "${key_file}" | base64 --decode > "${HOME}"/key_file.json; \
-      echo "build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
-        --google_credentials=$HOME/key_file.json" >> "${HOME}"/.bazelrc; \
+      echo 'build --remote_http_cache=https://storage.googleapis.com/gs.mak-play.com  \
+        --google_credentials=${HOME}/key_file.json' >> "${HOME}"/.bazelrc; \
       cat "${HOME}"/key_file.json; \
     fi
     
 RUN cat "${HOME}"/.bazelrc;
-RUN apt-get -yq update \
-    && apt-get -yq install --no-install-recommends curl ca-certificates gnupg2 libxml2 \
-    && apt-get clean
+#RUN apt-get -yq update \
+#    && apt-get -yq install --no-install-recommends curl ca-certificates gnupg2 libxml2 \
+#    && apt-get clean
 
 # Add bazel and cmake repositories.
 RUN curl -qL https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add -
@@ -48,10 +48,6 @@ RUN curl -fSsL $swift_tf_url -o swift.tar.gz \
     && mkdir usr \
     && tar -xzf swift.tar.gz --directory=usr --strip-components=1 \
     && rm swift.tar.gz
-
-RUN curl -fSsL $sccache_binary_url -o sccache.tar.gz \
-    && tar -xzf sccache.tar.gz --directory=usr --strip-components=1 \
-    && rm sccache.tar.gz
     
 # Print out swift version for better debugging for toolchain problems
 RUN /swift-tensorflow-toolchain/usr/bin/swift --version
@@ -63,9 +59,6 @@ WORKDIR /swift-apis
 # Perform CMake based build
 ENV TF_NEED_CUDA=0
 ENV CTEST_OUTPUT_ON_FAILURE=1
-ENV SCCACHE_GCS_RW_MODE=READ_WRITE
-ENV SCCACHE_GCS_BUCKET=gs.mak-play.com
-ENV SCCACHE_GCS_KEY_PATH="${HOME}"/key_file.json
 ENV RUST_LOG=info,error,warn
 
 RUN cmake                                                                       \
@@ -75,8 +68,8 @@ RUN cmake                                                                       
       -D CMAKE_INSTALL_PREFIX=/swift-tensorflow-toolchain/usr                   \
       -D CMAKE_Swift_COMPILER=/swift-tensorflow-toolchain/usr/bin/swiftc        \
       -D BUILD_X10=YES                                                          \
-      -D CMAKE_CXX_COMPILER_LAUNCHER=sccache                                    \
-      -D CMAKE_C_COMPILER_LAUNCHER=sccache                                      \
+      -D USE_BUNDLED_X10=YES                                                    \
+      -D USE_BUNDLED_CTENSORFLOW=YES                                            \
       -G Ninja                                                                  \
       -S /swift-apis
       

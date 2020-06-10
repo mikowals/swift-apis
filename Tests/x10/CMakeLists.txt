@@ -31,3 +31,10 @@ target_link_libraries(tensor_visitor_plan_test PRIVATE
 add_test(NAME X10.TensorVisitorPlan
   COMMAND tensor_visitor_plan_test)
 
+add_executable(training_loop_test
+  TrainingLoopTest.swift)
+target_link_libraries(training_loop_test PRIVATE
+  x10
+  x10_training_loop)
+add_test(NAME X10.TrainingLoop
+  COMMAND training_loop_test)
