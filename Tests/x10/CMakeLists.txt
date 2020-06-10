@@ -35,7 +35,7 @@ add_executable(training_loop_test
   TrainingLoopTest.swift)
 target_link_libraries(training_loop_test PRIVATE
   x10
-  x10_training_loop,
+  TensorFlow,
   CX10)
 add_test(NAME X10.TrainingLoop
   COMMAND training_loop_test)
