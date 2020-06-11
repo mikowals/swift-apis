@@ -127,7 +127,7 @@ public struct BatchNorm<Scalar: TensorFlowFloatingPoint>: Layer {
     normalizedAxes.remove(at: axis)
     let moments = input.moments(alongAxes: normalizedAxes)
     let decayMomentum = Tensor(1 - momentum, on: input.device)
-    let isReducedPrecision = withoutDerivative(at: input) { $0.isReducedPrecision }
+    let isReducedPrecision = input.isReducedPrecision
     var momentsMean = moments.mean
     var momentsVariance = moments.variance
     if isReducedPrecision {
@@ -147,7 +147,7 @@ public struct BatchNorm<Scalar: TensorFlowFloatingPoint>: Layer {
   private func doInference(
     _ input: Tensor<Scalar>, offset: Tensor<Scalar>, scale: Tensor<Scalar>
   ) -> Tensor<Scalar> {
-    let isReducedPrecision = withoutDerivative(at: input) { $0.isReducedPrecision }
+    let isReducedPrecision = input.isReducedPrecision
     let runningVarianceValue =
       isReducedPrecision ? runningVariance.value.toReducedPrecision : runningVariance.value
     let runningMeanValue =
