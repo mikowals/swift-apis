@@ -4,10 +4,10 @@ steps:
       - '--destination=gcr.io/$PROJECT_ID/image'
       - '--cache=true'
       - '--cache-ttl=24h'
-env:
-  - name: AWS_ACCESS_KEY_ID
-    value: NOT_SET
-  - name: AWS_SECRET_KEY
-    value: NOT_SET
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        value: NOT_SET
+      - name: AWS_SECRET_KEY
+        value: NOT_SET
 timeout: 15000s
 
