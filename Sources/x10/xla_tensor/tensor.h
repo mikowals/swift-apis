@@ -482,6 +482,13 @@ class XLATensor {
   static void div_(XLATensor& input, const XLATensor& other);
   static void div_(XLATensor& input, at::Scalar other);
 
+  static XLATensor dynamic_slice(
+      const XLATensor& base, absl::Span<const XLATensor> start_indices,
+      absl::Span<const xla::int64> slice_shapes);
+  static XLATensor dynamic_update_slice(
+      const XLATensor& base, const XLATensor& update,
+      absl::Span<const XLATensor> start_indices);
+
   // A generalized contraction between tensors of arbitrary dimension defined by
   // the given equation and applied to the input tensors.
   static XLATensor einsum(const std::string& equation,
@@ -685,6 +692,9 @@ class XLATensor {
                                        const XLATensor& input,
                                        double negative_slope);
   static void leaky_relu_(XLATensor& input, double negative_slope);
+
+  static void linspace_out(XLATensor& out, at::Scalar start, at::Scalar stop,
+                           xla::int64 num, at::ScalarType scalar_type);
 
   static XLATensor log(const XLATensor& input);
   static void log_(XLATensor& input);
@@ -1261,6 +1271,8 @@ class XLATensor {
 
   static XLATensor xla_truncated_normal(const XLATensor& input);
 
+  static XLATensor xla_replica_id(const Device& device);
+
  private:
   struct SyncTensorsConfig {
     // Whether we want to force XLA data on the target tensors (hence trimming
@@ -1496,6 +1508,18 @@ class XLATensor {
       const SyncTensorsConfig& config);
 
   static xla::int64 GetNextTensorId();
+
+  // Check if the current node is a cutpoint (by hash) and apply pending graph -
+  // in other words, cut the trace - and return true iff that's the case.
+  bool ApplyTraceletCutpoint();
+
+  // Detect when new compilations are triggered after first few steps and
+  // attempt to find common portions, after which the trace is cut. This is
+  // meant to address variable upper bound loops, which lead to different
+  // unrolled sequences of code despite the body being identical. The hope is to
+  // reach a steady state in which no new tracelets are created after a
+  // relatively small number of cuts.
+  static void InsertTraceletCutpoint(const PostOrderData& po_data);
 
   std::shared_ptr<Data> data_;
 };

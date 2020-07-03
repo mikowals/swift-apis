@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import _Differentiation
+
 infix operator .>: ComparisonPrecedence
 infix operator .==: ComparisonPrecedence
 
@@ -1369,6 +1371,7 @@ func _vjpElu<T: TensorFlowFloatingPoint>(
 @inlinable
 @differentiable
 public func gelu<T: TensorFlowFloatingPoint>(_ x: Tensor<T>) -> Tensor<T> {
+  // Use withoutDerivative to prevent device mismatch in pullback.
   let xWithoutDerivative = withoutDerivative(at: x)
   // An approximation of √(2/π).
   let ratio1 = Tensor<T>(0.7978845608, deviceAndPrecisionLike: xWithoutDerivative)
@@ -2814,8 +2817,8 @@ extension Tensor where Scalar: TensorFlowFloatingPoint {
         where: rawMax.isFinite)
     }
     let result = Tensor.log(Tensor.exp(self - offset).sum(squeezingAxes: axes))
-    let resultShape = withoutDerivative(at: result.shapeTensor)
-    return result + offset.reshaped(toShape: resultShape)
+    let resultShape = withoutDerivative(at: result.shape)
+    return result + offset.reshaped(to: resultShape)
   }
 
   /// Returns `log(exp(self).sum(squeezingAxes: axes))`. The reduced dimensions are removed.
@@ -3062,9 +3065,9 @@ internal func _vjpMatmul<Scalar: TensorFlowFloatingPoint>(
         rhsGrad = matmul(lhs, transposed: true, v, transposed: false)
       case (false, true):
         lhsGrad = matmul(v, rhs)
-        rhsGrad = matmul(lhs, transposed: true, v, transposed: false)
+        rhsGrad = matmul(v, transposed: true, lhs, transposed: false)
       case (true, false):
-        lhsGrad = matmul(v, transposed: false, rhs, transposed: true)
+        lhsGrad = matmul(rhs, transposed: false, v, transposed: true)
         rhsGrad = matmul(lhs, v)
       case (true, true):
         lhsGrad = matmul(v, transposed: true, rhs, transposed: true)

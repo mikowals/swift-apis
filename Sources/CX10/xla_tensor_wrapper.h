@@ -266,6 +266,12 @@ XLA_API OpaqueXLATensor* XLATensor_diagonal_value(OpaqueXLATensor* a,
                                                   int64_t offset, int64_t dim1,
                                                   int64_t dim2);
 XLA_API OpaqueXLATensor* XLATensor_div(OpaqueXLATensor* a, OpaqueXLATensor* b);
+XLA_API OpaqueXLATensor* XLATensor_dynamic_slice(
+    OpaqueXLATensor* base,
+    OpaqueXLATensorArrayRef start_indices, Int64ArrayRef slice_shapes);
+XLA_API OpaqueXLATensor* XLATensor_dynamic_update_slice(
+    OpaqueXLATensor* base, OpaqueXLATensor* update,
+    OpaqueXLATensorArrayRef inputs);
 XLA_API OpaqueXLATensor* XLATensor_eq(OpaqueXLATensor* a, OpaqueXLATensor* b);
 XLA_API OpaqueXLATensor* XLATensor_exp(OpaqueXLATensor* a);
 XLA_API OpaqueXLATensor*
@@ -287,6 +293,10 @@ XLA_API OpaqueXLATensor* XLATensor_is_inf(OpaqueXLATensor* input);
 XLA_API OpaqueXLATensor* XLATensor_is_nan(OpaqueXLATensor* input);
 XLA_API OpaqueXLATensor* XLATensor_le(OpaqueXLATensor* x, OpaqueXLATensor* y);
 XLA_API OpaqueXLATensor* XLATensor_lt(OpaqueXLATensor* x, OpaqueXLATensor* y);
+XLA_API OpaqueXLATensor* XLATensor_linspace(XLAScalar start, XLAScalar stop,
+                                            int64_t num,
+                                            const struct CDevice device,
+                                            enum XLATensorScalarType type);
 XLA_API OpaqueXLATensor* XLATensor_log(OpaqueXLATensor* a);
 XLA_API OpaqueXLATensor* XLATensor_log1p(OpaqueXLATensor* a);
 XLA_API OpaqueXLATensor* XLATensor_log_softmax(OpaqueXLATensor* a, int64_t dim);
@@ -337,6 +347,7 @@ XLA_API OpaqueXLATensor* XLATensor_relu(OpaqueXLATensor* a);
 XLA_API OpaqueXLATensor* XLATensor_rem(OpaqueXLATensor* a, OpaqueXLATensor* b);
 XLA_API OpaqueXLATensor* XLATensor_repeat(OpaqueXLATensor* input,
                                           Int64ArrayRef repeats);
+XLA_API OpaqueXLATensor* XLATensor_replica_id(const struct CDevice device);
 XLA_API OpaqueXLATensor*
 XLATensor_resize_value(OpaqueXLATensor* a, Int64ArrayRef arr);
 XLA_API OpaqueXLATensor* XLATensor_round_to_even(OpaqueXLATensor* a);

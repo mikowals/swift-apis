@@ -49,6 +49,8 @@
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/cumsum.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/device_data.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/diagonal.h"
+#include "tensorflow/compiler/tf2xla/xla_tensor/ops/dynamic_slice.h"
+#include "tensorflow/compiler/tf2xla/xla_tensor/ops/dynamic_update_slice.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/einsum.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/expand.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/exponential.h"
@@ -95,6 +97,7 @@
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/reflection_pad2d.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/reflection_pad2d_backward.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/repeat.h"
+#include "tensorflow/compiler/tf2xla/xla_tensor/ops/replica_id.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/replication_pad.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/replication_pad_backward.h"
 #include "tensorflow/compiler/tf2xla/xla_tensor/ops/resize.h"
@@ -1041,6 +1044,33 @@ void XLATensor::div_(XLATensor& input, at::Scalar other) {
   input.SetInPlaceIrValue(input.GetIrValue() / constant);
 }
 
+XLATensor XLATensor::dynamic_slice(
+    const XLATensor& base,
+    absl::Span<const XLATensor> start_indices,
+    absl::Span<const xla::int64> slice_shapes) {
+  XLA_CHECK_GT(start_indices.size(), 0);
+  std::vector<ir::Value> values;
+  for (auto& tensor : start_indices) {
+    values.push_back(tensor.GetIrValue());
+  }
+  return base.CreateFrom(ir::MakeNode<ir::ops::DynamicSlice>(
+      base.GetIrValue(),
+      absl::Span<const ir::Value>(values), slice_shapes));
+}
+
+XLATensor XLATensor::dynamic_update_slice(
+    const XLATensor& base, const XLATensor& update,
+    absl::Span<const XLATensor> start_indices) {
+  XLA_CHECK_GT(start_indices.size(), 0);
+  std::vector<ir::Value> values;
+  for (auto& tensor : start_indices) {
+    values.push_back(tensor.GetIrValue());
+  }
+  return base.CreateFrom(ir::MakeNode<ir::ops::DynamicUpdateSlice>(
+      base.GetIrValue(), update.GetIrValue(),
+      absl::Span<const ir::Value>(values)));
+}
+
 XLATensor XLATensor::eq(const XLATensor& input, at::Scalar other) {
   return DispatchComparisonOp(at::aten::eq, input, other);
 }
@@ -1535,6 +1565,12 @@ XLATensor XLATensor::leaky_relu_backward(const XLATensor& grad_output,
 void XLATensor::leaky_relu_(XLATensor& input, double negative_slope) {
   input.SetInPlaceIrValue(
       ir::MakeNode<ir::ops::LeakyRelu>(input.GetIrValue(), negative_slope));
+}
+
+void XLATensor::linspace_out(XLATensor& out, at::Scalar start, at::Scalar stop,
+                             xla::int64 num, at::ScalarType scalar_type) {
+  out.SetIrValue(ir::ops::LinSpace(start, stop, num, scalar_type));
+  out.SetScalarType(scalar_type);
 }
 
 XLATensor XLATensor::log(const XLATensor& input) {
@@ -3029,6 +3065,10 @@ XLATensor XLATensor::xla_slice(const XLATensor& input,
 
 XLATensor XLATensor::xla_truncated_normal(const XLATensor& input) {
   return input.CreateFrom(ir::ops::XlaTruncatedNormal(input.GetIrValue()));
+}
+
+XLATensor XLATensor::xla_replica_id(const Device& device) {
+  return XLATensor::Create(ir::MakeNode<ir::ops::ReplicaId>(), device);
 }
 
 }  // namespace swift_xla

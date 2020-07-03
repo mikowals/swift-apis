@@ -753,10 +753,13 @@
   _(aten, zeros_like)                                       \
   _(aten, xla_avg_pool)                                     \
   _(aten, xla_avg_pool_grad)                                \
+  _(aten, xla_dynamic_update_slice)                         \
+  _(aten, xla_dynamic_slice)                                \
   _(aten, xla_max_pool)                                     \
   _(aten, xla_max_pool_grad)                                \
   _(aten, xla_pad)                                          \
   _(aten, xla_rem)                                          \
+  _(aten, xla_replica_id)                                   \
   _(aten, xla_slice)                                        \
   _(aten, xla_truncated_normal)                             \
   _(aten, xla_is_finite)                                    \
