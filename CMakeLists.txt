@@ -94,25 +94,8 @@ if(NOT X10_FOUND AND NOT USE_BUNDLED_X10)
   endforeach()
 endif()
 
-<<<<<<< HEAD
-if(BUILD_X10)
-  add_library(tensorflow UNKNOWN IMPORTED)
-  if(NOT X10_FOUND AND NOT USE_BUNDLED_X10)
-    set_target_properties(tensorflow PROPERTIES
-      IMPORTED_LOCATION ${X10_LIBRARY}
-      INTERFACE_INCLUDE_DIRECTORIES "${SOURCE_DIR}")
-  else()
-    set_target_properties(tensorflow PROPERTIES
-      IMPORTED_LOCATION ${X10_LIBRARY}
-      INTERFACE_INCLUDE_DIRECTORIES "${X10_INCLUDE_DIRS}")
-  endif()
-else()
-  find_package(TensorFlow REQUIRED)
-endif()
-=======
 find_package(dispatch CONFIG QUIET)
 find_package(Foundation CONFIG QUIET)
->>>>>>> feb9d97542606a0c855e110b8d6c1269660f8c51
 
 include(CTest)
 include(SwiftSupport)
