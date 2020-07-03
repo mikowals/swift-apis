@@ -1,5 +1,5 @@
 steps:
-- name: 'gcr.io/kaniko-project/executor:v0.19.0'
+- name: 'gcr.io/kaniko-project/executor:v0.24.0'
   args:
   - --destination=gcr.io/$PROJECT_ID/image
   - --cache=true
