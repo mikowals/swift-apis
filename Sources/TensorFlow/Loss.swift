@@ -242,7 +242,15 @@ public func softmaxCrossEntropy<Scalar: TensorFlowFloatingPoint>(
   labels: Tensor<Int32>,
   reduction: @differentiable (Tensor<Scalar>) -> Tensor<Scalar> = _mean
 ) -> Tensor<Scalar> {
-  reduction(softmaxCrossEntropyHelper(logits: logits, labels: labels))
+  if logits.rank == 2 {
+    return reduction(softmaxCrossEntropyHelper(logits: logits, labels: labels))
+  }
+  let logitsMatrix = logits.reshaped(to: [-1, logits.shape.last!])
+  let labels1D = labels.reshaped(to: [-1])
+  return reduction(
+    softmaxCrossEntropyHelper(
+      logits: logitsMatrix,
+      labels: labels1D).reshaped(to: logits.shape.dropLast(1)))
 }
 
 @inlinable
@@ -280,7 +288,15 @@ public func softmaxCrossEntropy<Scalar: TensorFlowFloatingPoint>(
   probabilities: Tensor<Scalar>,
   reduction: @differentiable (Tensor<Scalar>) -> Tensor<Scalar> = _mean
 ) -> Tensor<Scalar> {
-  reduction(softmaxCrossEntropyHelper(logits: logits, probabilities: probabilities))
+  if logits.rank == 2 {
+    return reduction(softmaxCrossEntropyHelper(logits: logits, probabilities: probabilities))
+  }
+  let logitsMatrix = logits.reshaped(to: [-1, logits.shape.last!])
+  let probabilitiesMatrix = probabilities.reshaped(to: [-1, probabilities.shape.last!])
+  return reduction(
+    softmaxCrossEntropyHelper(
+      logits: logitsMatrix,
+      probabilities: probabilitiesMatrix).reshaped(to: logits.shape.dropLast(1)))
 }
 
 @inlinable
