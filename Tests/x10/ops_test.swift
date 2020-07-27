@@ -3041,8 +3041,8 @@ final class TensorTests: XCTestCase {
   }
 
   func testSoftmaxCrossEntropyWithLogits() throws {
-    var features = Tensor<Float>.rand([3, 4])
-    var labels = Tensor<Float>.rand([3, 4])
+    var features = Tensor<Float>.rand([3, 4], on: x10)
+    var labels = Tensor<Float>.rand([3, 4], on: x10)
     var outGrad = Tensor<Float>(1.0, on: x10)
     for useReducedPrecision in [false, true] {
       if useReducedPrecision {
