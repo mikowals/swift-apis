@@ -186,10 +186,12 @@ final class LossTests: XCTestCase {
   }
     
     func testSoftmaxCrossEntropyWith4DProbabilitiesLoss() {
-      let logits = Tensor<Float>(shape: [2, 1, 1, 4], scalars: [1, 2, 3, 4, 5, 6, 7, 8])
+      let logits = Tensor<Float>(
+        shape: [2, 2, 1, 4],
+        scalars: [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8])
       let labels = Tensor<Float>(
-        shape: [2, 1, 1, 4],
-        scalars: [0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.1])
+        shape: [2, 2, 1, 4],
+        scalars: [0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.1, 0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.1])
 
       let loss = softmaxCrossEntropy(logits: logits, probabilities: labels)
       // Loss for two rows are 1.44019 and 2.44019 respectively.
@@ -198,10 +200,12 @@ final class LossTests: XCTestCase {
     }
 
     func testSoftmaxCrossEntropyWith4DProbabilitiesGrad() {
-      let logits = Tensor<Float>(shape: [2, 1, 1, 4], scalars: [1, 2, 3, 4, 5, 6, 7, 8])
+      let logits = Tensor<Float>(
+        shape: [2, 2, 1, 4],
+        scalars: [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8])
       let labels = Tensor<Float>(
-        shape: [2, 1, 1, 4],
-        scalars: [0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.1])
+        shape: [2, 2, 1, 4],
+        scalars: [0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.1, 0.1, 0.2, 0.3, 0.4, 0.4, 0.3, 0.2, 0.1])
 
       // For the logits and labels above, the gradients below are the golden values. To calcuate
       // them by hand, you can do
@@ -210,14 +214,17 @@ final class LossTests: XCTestCase {
       //
       //  where p_i is softmax(logits_i).
       let expectedGradientsBeforeMean = Tensor<Float>(
-        shape: [2, 1, 1, 4],
+        shape: [2, 2, 1, 4],
         scalars: [
-          -0.067941, -0.112856, -0.063117, 0.243914,
-          -0.367941, -0.212856, 0.036883, 0.543914,
+            -0.067941, -0.112856, -0.063117, 0.243914,
+            -0.367941, -0.212856, 0.036883, 0.543914,
+            -0.067941, -0.112856, -0.063117, 0.243914,
+            -0.367941, -0.212856, 0.036883, 0.543914,
         ])
 
       // As the loss is mean loss, we should scale the golden gradient numbers.
-      let expectedGradients = expectedGradientsBeforeMean / Float(logits.shape[0])
+      let expectedGradients =
+        expectedGradientsBeforeMean / Float(logits.shape[0..<(logits.rank - 1)].reduce(1, *))
       let gradients = gradient(
         at: logits,
         in: { softmaxCrossEntropy(logits: $0, probabilities: labels) })
