@@ -1,7 +1,7 @@
 FROM gcr.io/swift-tensorflow/base-deps-cuda10.2-cudnn7-ubuntu18.04
 
 # Allows the caller to specify the toolchain to use.
-ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-notf-ubuntu18.04.tar.gz
+ARG swift_tf_url=https://storage.googleapis.com/swift-tensorflow-artifacts/nightlies/latest/swift-tensorflow-DEVELOPMENT-ubuntu18.04.tar.gz
 ARG bazel_version=3.1.0
 
 RUN if test -d /swift-apis/google-cloud-sdk; then \
