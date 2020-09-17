@@ -464,6 +464,7 @@ extension Tensor where Scalar: Numeric {
   /// Adds two tensors and stores the result in the left-hand-side variable.
   /// - Note: `+=` supports broadcasting.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func += (lhs: inout Tensor, rhs: Tensor) {
     lhs = lhs + rhs
   }
@@ -471,6 +472,7 @@ extension Tensor where Scalar: Numeric {
   /// Adds the scalar to every scalar of the tensor and stores the result in the left-hand-side
   /// variable.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func += (lhs: inout Tensor, rhs: Scalar) {
     lhs = lhs + rhs
   }
@@ -479,6 +481,7 @@ extension Tensor where Scalar: Numeric {
   /// variable.
   /// - Note: `-=` supports broadcasting.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func -= (lhs: inout Tensor, rhs: Tensor) {
     lhs = lhs - rhs
   }
@@ -486,6 +489,7 @@ extension Tensor where Scalar: Numeric {
   /// Subtracts the scalar from every scalar of the tensor and stores the result in the
   /// left-hand-side variable.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func -= (lhs: inout Tensor, rhs: Scalar) {
     lhs = lhs - rhs
   }
@@ -515,6 +519,7 @@ extension Tensor where Scalar: Numeric {
   /// Multiplies two tensors and stores the result in the left-hand-side variable.
   /// - Note: `*=` supports broadcasting.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func *= (lhs: inout Tensor, rhs: Tensor) {
     lhs = lhs * rhs
   }
@@ -522,6 +527,7 @@ extension Tensor where Scalar: Numeric {
   /// Multiplies the tensor with the scalar, broadcasting the scalar, and stores the result in the
   /// left-hand-side variable.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func *= (lhs: inout Tensor, rhs: Scalar) {
     lhs = lhs * rhs
   }
@@ -551,6 +557,7 @@ extension Tensor where Scalar: Numeric {
   /// Divides the first tensor by the second and stores the quotient in the left-hand-side
   /// variable.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func /= (lhs: inout Tensor, rhs: Tensor) {
     lhs = lhs / rhs
   }
@@ -558,6 +565,7 @@ extension Tensor where Scalar: Numeric {
   /// Divides the tensor by the scalar, broadcasting the scalar, and stores the quotient in the
   /// left-hand-side variable.
   @inlinable
+  @differentiable(where Scalar: TensorFlowFloatingPoint)
   public static func /= (lhs: inout Tensor, rhs: Scalar) {
     lhs = lhs / rhs
   }

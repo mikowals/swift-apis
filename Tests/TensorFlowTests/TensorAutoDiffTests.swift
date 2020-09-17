@@ -209,6 +209,18 @@ final class TensorAutoDiffTests: XCTestCase {
         == gradient(at: Tensor<Float>(0), Tensor<Float>(0), in: f))
     XCTAssertTrue(([1], [1]) == pullback(at: [1], [10], in: f)([1]))
   }
+    
+  func testPlusEquals() {
+    func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> {
+      var tmp = a
+      tmp += b
+      return tmp
+    }
+    XCTAssertTrue(
+      (Tensor<Float>(1), Tensor<Float>(1))
+        == gradient(at: Tensor<Float>(0), Tensor<Float>(0), in: f))
+    XCTAssertTrue(([1], [1]) == pullback(at: [1], [10], in: f)([1]))
+  }
 
   func testSubtract() {
     func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> { a - b }
@@ -218,17 +230,49 @@ final class TensorAutoDiffTests: XCTestCase {
     XCTAssertTrue(([1], [-1]) == pullback(at: [1], [10], in: f)([1]))
   }
 
+  func testSubtractEquals() {
+    func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> {
+      var tmp = a
+      tmp -= b
+      return tmp
+    }
+    
+    XCTAssertTrue(
+      (Tensor<Float>(1), Tensor<Float>(-1))
+        == gradient(at: Tensor<Float>(0), Tensor<Float>(0), in: f))
+    XCTAssertTrue(([1], [-1]) == pullback(at: [1], [10], in: f)([1]))
+  }
+    
   func testMultiply() {
     func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> { (a * b).sum() }
     XCTAssertTrue(([0], [0]) == gradient(at: [0], [0], in: f))
     XCTAssertTrue(([10], [1]) == gradient(at: [1], [10], in: f))
   }
-
+    
+  func testMultiplyEquals() {
+    func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> {
+      var tmp = a
+      tmp *= b
+      return tmp.sum()
+    }
+    XCTAssertTrue(([0], [0]) == gradient(at: [0], [0], in: f))
+    XCTAssertTrue(([10], [1]) == gradient(at: [1], [10], in: f))
+  }
+    
   func testDivide() {
     func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> { a / b }
     XCTAssertTrue(([0.1], [-0.01]) == pullback(at: [1], [10], in: f)([1]))
   }
 
+  func testDivideEquals() {
+    func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> {
+      var tmp = a
+      tmp /= b
+      return tmp
+    }
+    XCTAssertTrue(([0.1], [-0.01]) == pullback(at: [1], [10], in: f)([1]))
+  }
+    
   func testMatmul() {
     func f(a: Tensor<Float>, b: Tensor<Float>) -> Tensor<Float> { matmul(a, b) }
     let v = Tensor<Float>(ones: [1, 1])
@@ -1121,9 +1165,13 @@ final class TensorAutoDiffTests: XCTestCase {
     ("testInitFromScalars", testInitFromScalars),
     ("testInitFromScalarsWithShape", testInitFromScalarsWithShape),
     ("testPlus", testPlus),
+    ("testPlusEquals", testPlusEquals),
     ("testSubtract", testSubtract),
+    ("testSubtractEquals", testSubtractEquals),
     ("testMultiply", testMultiply),
+    ("testMultiplyEquals", testMultiplyEquals),
     ("testDivide", testDivide),
+    ("testDivideEquals", testDivideEquals),
     ("testMatmul", testMatmul),
     ("testDot", testDot),
     ("testNegate ", testNegate),
